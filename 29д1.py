@@ -118,7 +118,6 @@ def index():
     if 'username' not in session:
         return redirect('/login')
     news = NewsModel(db.get_connection()).get_all(session['user_id'])
-    print(news)
     return render_template('index.html', username=session['username'],
                            news=news)
 
@@ -152,18 +151,37 @@ def add_book():
     if 'username' not in session:
         return redirect('/login')
     form = AddNewsForm()
-    print(form.validate_on_submit())
+    # if title is not None:
+    #    form.name.data = title
+    #    form.content.data = content
+    #    form.link.data = brifly
+    #    form.foto.data = photo
     if form.validate_on_submit():
         title = form.name.data
         content = form.content.data
         brifly = form.link.data
         photo = form.foto.data
         nm = NewsModel(db.get_connection())
+        # if title is not None:
+        #    nm.delete(news_id)
         nm.insert(title, content, brifly, photo, session['user_id'])
-
         return redirect("/index")
     return render_template('add_news.html', title='Добавить книгу',
                            form=form, username=session['username'])
+
+
+# @app.route('/red_book/<int:news_id>', methods=['GET', 'POST'])
+# def red_book(news_id):
+#    print(0)
+#    if 'username' not in session:
+#        return redirect('/login')
+#    nm = NewsModel(db.get_connection())
+#    a = nm.get(news_id)
+#    title = a[1]
+#    content = a[2]
+#    brifly = a[3]
+#    photo = a[4]
+#    id = a[0]
 
 
 @app.route('/delete_book/<int:news_id>', methods=['GET'])
