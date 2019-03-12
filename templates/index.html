@@ -12,14 +12,18 @@
         <title>Пример формы</title>
 </div>
 {% if "username" in session %}
-<a class="navbar-brand" href="/logout">{{session['username']}}</a>
+<a class="navbar-brand" href="/logout">Выход</a>
 {% endif %}
-<a href="/add_news">Добавить новость</a>
+<a href="/add_book">Добавить книгу</a>
 {% for item in news %}
 <div class="alert alert-dark" role="alert">
     <h2>{{item[1]}}</h2>
     <div>{{item[2]}}</div>
-    <a href="/delete_news/{{item[0]}}">Удалить новость</a>
+    <div>{{item[3]}}</div>
+    <div>
+        <img class="d-block w-100" src={{item[4]}}>
+    </div>
+    <a href="/delete_book/{{item[0]}}">Удалить книгу</a>
 </div>
 {% endfor %}
 {% endblock %}
