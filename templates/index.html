@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-        <meta charset="utf-8">
-        <meta name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
-        <title>Пример формы</title>
-</div>
 {% if "username" in session %}
 <a class="navbar-brand" href="/logout">Выход</a>
 {% endif %}
@@ -21,7 +11,7 @@
     <div>{{item[2]}}</div>
     <a href={{item[3]}}>{{item[3]}}</a>
     <div>
-        <img class="d-block w-100 h-100" src={{item[4]}}>
+        <img class="d-block w-100 h-100" src="static/{{item[4]}}">
     </div>
     <a href="/delete_book/{{item[0]}}">Удалить книгу</a>#<a href="/index"> книгу</a>
 </div>

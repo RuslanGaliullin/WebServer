@@ -2,9 +2,14 @@ import sqlite3
 from flask import Flask, request, render_template, session, redirect
 from add_news import AddNewsForm
 from flas import LoginForm
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
+UPLOAD_FOLDER = 'static/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 class DB:
@@ -72,7 +77,7 @@ class NewsModel:
                              name VARCHAR(100),
                              content VARCHAR(1000),
                              brifly VARCHAR(100),
-                             photo FILE,
+                             photo VARCHAR(100),
                              user_id INTEGER
                              )''')
         cursor.close()
@@ -105,6 +110,7 @@ class NewsModel:
     def delete(self, news_id):
         cursor = self.connection.cursor()
         cursor.execute('''DELETE FROM news WHERE id = ?''', (str(news_id)))
+
         cursor.close()
         self.connection.commit()
 
@@ -148,26 +154,24 @@ def logout():
 
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
-    if 'username' not in session:
-        return redirect('/login')
-    form = AddNewsForm()
-    # if title is not None:
-    #    form.name.data = title
-    #    form.content.data = content
-    #    form.link.data = brifly
-    #    form.foto.data = photo
-    if form.validate_on_submit():
-        title = form.name.data
-        content = form.content.data
-        brifly = form.link.data
-        photo = form.foto.data
-        nm = NewsModel(db.get_connection())
+    if request.method == 'GET':
+        return render_template('add_news.html')
+    elif request.method == 'POST':
+        if 'username' not in session:
+            return redirect('/login')
         # if title is not None:
-        #    nm.delete(news_id)
-        nm.insert(title, content, brifly, photo, session['user_id'])
+        #    form.name.data = title
+        #    form.content.data = content
+        #    form.link.data = brifly
+        #    form.foto.data = photo
+        title = 'sd'
+        content = 'sfdsf'
+        brifly = 'qwere'
+        request.files['file'].save('static/' + request.files['file'].filename)
+        nm = NewsModel(db.get_connection())
+        nm.insert(title, content, brifly, request.files['file'].filename, session['user_id'])
         return redirect("/index")
-    return render_template('add_news.html', title='Добавить книгу',
-                           form=form, username=session['username'])
+        # return render_template('add_news.html')
 
 
 # @app.route('/red_book/<int:news_id>', methods=['GET', 'POST'])
@@ -206,4 +210,4 @@ def form_sample():
 
 
 if __name__ == '__main__':
-    app.run(port=8080, host='127.0.0.3')
+    app.run(port=8080, host='127.0.0.1')
