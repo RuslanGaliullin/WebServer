@@ -9,11 +9,11 @@
 <div class="alert alert-dark" role="alert">
     <h2>{{item[1]}}</h2>
     <div>{{item[2]}}</div>
-    <a href={{item[3]}}>{{item[3]}}</a>
+    <div>{{item[3]}}</div>
     <div>
         <img class="d-block w-100 h-100" src="static/{{item[4]}}">
     </div>
-    <a href="/delete_book/{{item[0]}}">Удалить книгу</a>#<a href="/index"> книгу</a>
+    <a href="/delete_book/{{item[0]}}">Удалить книгу</a>
 </div>
 {% endfor %}
 {% endblock %}

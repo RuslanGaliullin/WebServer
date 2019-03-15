@@ -76,18 +76,19 @@ class NewsModel:
                             (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                              name VARCHAR(100),
                              content VARCHAR(1000),
-                             brifly VARCHAR(100),
+                             ingridiens VARCHAR(100),
                              photo VARCHAR(100),
+                             hard INTEGER,
                              user_id INTEGER
                              )''')
         cursor.close()
         self.connection.commit()
 
-    def insert(self, name, content, brifly, photo, user_id):
+    def insert(self, name, content, ingridiens, photo, hard, user_id):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO news 
-                          (name, content,brifly,photo, user_id) 
-                          VALUES (?,?,?,?,?)''', (name, content, brifly, photo, str(user_id)))
+                          (name, content,ingridiens,photo,hard, user_id) 
+                          VALUES (?,?,?,?,?)''', (name, content, ingridiens, photo, hard, str(user_id)))
         cursor.close()
         self.connection.commit()
 
@@ -116,6 +117,10 @@ class NewsModel:
 
 
 db = DB()
+news = NewsModel(db.get_connection())
+news.init_table()
+user_model = UsersModel(db.get_connection())
+user_model.init_table()
 
 
 @app.route('/')
@@ -166,10 +171,11 @@ def add_book():
         #    form.foto.data = photo
         title = 'sd'
         content = 'sfdsf'
-        brifly = 'qwere'
+        ingridiens = 'dsfa'
+        hard = 0
         request.files['file'].save('static/' + request.files['file'].filename)
         nm = NewsModel(db.get_connection())
-        nm.insert(title, content, brifly, request.files['file'].filename, session['user_id'])
+        nm.insert(title, content, ingridiens, hard, request.files['file'].filename, session['user_id'])
         return redirect("/index")
         # return render_template('add_news.html')
 
@@ -193,6 +199,9 @@ def delete_book(news_id):
     if 'username' not in session:
         return redirect('/login')
     nm = NewsModel(db.get_connection())
+    a = nm.get(news_id)
+    filename = a[4]
+    os.remove('static/' + filename)
     nm.delete(news_id)
     return redirect("/index")
 

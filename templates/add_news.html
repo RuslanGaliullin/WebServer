@@ -2,13 +2,17 @@
 
 {% block content %}
 <body>
-<h1>Загрузим файл</h1>
+Назвагие рецепта сложность
+<div class="form-group w-10 h-10%" >
+    <label for="about">Рецепт</label>
+    <textarea class="form-control w-100 h-10" id="about" rows="10" name="recipe"></textarea>
+</div>
+<alert>Загрузите фотографию готового блюда</alert>
 <form method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="photo">Выберите файл</label>
         <input type="file" class="form-control-file" id="photo" name="file">
     </div>
-    <button type="submit" class="btn btn-primary">Отправить</button>
+    <button type="submit" class="btn btn-primary">Добавить</button>
 </form>
 </body>
 {% endblock %}
