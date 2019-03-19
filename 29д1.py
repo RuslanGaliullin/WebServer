@@ -3,13 +3,11 @@ from flask import Flask, request, render_template, session, redirect
 from add_news import AddNewsForm
 from flas import LoginForm
 import os
-from werkzeug.utils import secure_filename
+from PIL import Image
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
-UPLOAD_FOLDER = 'static/'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 class DB:
@@ -76,7 +74,7 @@ class NewsModel:
                             (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                              name VARCHAR(100),
                              content VARCHAR(1000),
-                             ingridiens VARCHAR(100),
+                             ingrid VARCHAR(100),
                              photo VARCHAR(100),
                              hard INTEGER,
                              user_id INTEGER
@@ -84,11 +82,11 @@ class NewsModel:
         cursor.close()
         self.connection.commit()
 
-    def insert(self, name, content, ingridiens, photo, hard, user_id):
+    def insert(self, name, content, ingrid, photo, hard, user_id):
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO news 
-                          (name, content,ingridiens,photo,hard, user_id) 
-                          VALUES (?,?,?,?,?)''', (name, content, ingridiens, photo, hard, str(user_id)))
+                          (name, content, ingrid, photo,hard, user_id) 
+                          VALUES (?,?,?,?,?,?)''', (name, content, ingrid, photo, hard, str(user_id)))
         cursor.close()
         self.connection.commit()
 
@@ -121,6 +119,14 @@ news = NewsModel(db.get_connection())
 news.init_table()
 user_model = UsersModel(db.get_connection())
 user_model.init_table()
+
+
+def editor_files(name):
+    img = Image.open(name)
+    width = 800
+    height = 800
+    resized_img = img.resize((width, height), Image.ANTIALIAS)
+    resized_img.save(name)
 
 
 @app.route('/')
@@ -171,11 +177,13 @@ def add_book():
         #    form.foto.data = photo
         title = 'sd'
         content = 'sfdsf'
-        ingridiens = 'dsfa'
+        ingrid = 'dsfa'
         hard = 0
-        request.files['file'].save('static/' + request.files['file'].filename)
+        where = 'static/' + request.files['file'].filename
+        request.files['file'].save(where)
+        editor_files(where)
         nm = NewsModel(db.get_connection())
-        nm.insert(title, content, ingridiens, hard, request.files['file'].filename, session['user_id'])
+        nm.insert(title, content, ingrid, hard, where, session['user_id'])
         return redirect("/index")
         # return render_template('add_news.html')
 
@@ -200,8 +208,8 @@ def delete_book(news_id):
         return redirect('/login')
     nm = NewsModel(db.get_connection())
     a = nm.get(news_id)
-    filename = a[4]
-    os.remove('static/' + filename)
+    filename = a[5]
+    os.remove(filename)
     nm.delete(news_id)
     return redirect("/index")
 
