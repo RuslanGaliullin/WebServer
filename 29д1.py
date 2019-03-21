@@ -1,13 +1,12 @@
 import sqlite3
 from flask import Flask, request, render_template, session, redirect
-from add_news import AddNewsForm
+import  datetime
 from flas import LoginForm
 import os
 from PIL import Image
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-
 
 
 class DB:
@@ -77,6 +76,7 @@ class NewsModel:
                              ingrid VARCHAR(100),
                              photo VARCHAR(100),
                              hard INTEGER,
+                             date,
                              user_id INTEGER
                              )''')
         cursor.close()
@@ -84,9 +84,11 @@ class NewsModel:
 
     def insert(self, name, content, ingrid, photo, hard, user_id):
         cursor = self.connection.cursor()
+        date = int(str(datetime.date.today()).split('-')[0]) + int(str(datetime.date.today()).split('-')[1]) + int(
+            str(datetime.date.today()).split('-')[2])
         cursor.execute('''INSERT INTO news 
-                          (name, content, ingrid, photo,hard, user_id) 
-                          VALUES (?,?,?,?,?,?)''', (name, content, ingrid, photo, hard, str(user_id)))
+                          (name, content, ingrid, photo,hard,date, user_id) 
+                          VALUES (?,?,?,?,?,?)''', (name, content, ingrid, photo, hard, date, str(user_id)))
         cursor.close()
         self.connection.commit()
 
@@ -96,13 +98,13 @@ class NewsModel:
         row = cursor.fetchone()
         return row
 
-    def get_all(self, user_id=None):
+    def get_all(self, user_id=None, sort=None):
         cursor = self.connection.cursor()
         if user_id:
             cursor.execute("SELECT * FROM news WHERE user_id = ?",
                            (str(user_id)))
         else:
-            cursor.execute("SELECT * FROM news")
+            cursor.execute("SELECT * FROM news ORDER BY {}".format(sort))
         rows = cursor.fetchall()
         return rows
 
@@ -123,8 +125,8 @@ user_model.init_table()
 
 def editor_files(name):
     img = Image.open(name)
-    width = 800
-    height = 800
+    width = 96
+    height = 96
     resized_img = img.resize((width, height), Image.ANTIALIAS)
     resized_img.save(name)
 
@@ -132,11 +134,15 @@ def editor_files(name):
 @app.route('/')
 @app.route('/index')
 def index():
-    if 'username' not in session:
-        return redirect('/login')
-    news = NewsModel(db.get_connection()).get_all(session['user_id'])
-    return render_template('index.html', username=session['username'],
+    news = NewsModel(db.get_connection()).get_all(None, 'date')
+    return render_template('index.html',
                            news=news)
+
+
+@app.route('/index_name')
+def index_name():
+    news = NewsModel(db.get_connection()).get_all(None, 'name')
+    return render_template('index.html', news=news)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -175,9 +181,9 @@ def add_book():
         #    form.content.data = content
         #    form.link.data = brifly
         #    form.foto.data = photo
-        title = 'sd'
-        content = 'sfdsf'
-        ingrid = 'dsfa'
+        title = request.form['name']
+        content = request.form['recipe']
+        ingrid = request.form['ingrid']
         hard = 0
         where = 'static/' + request.files['file'].filename
         request.files['file'].save(where)

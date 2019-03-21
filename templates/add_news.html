@@ -3,22 +3,22 @@
 {% block content %}
 <body>
 <h3>Название</h3>
-<div class="row">
-    <div class="col-md-6">
-        <input type="str" class="form-control" id="name" name="name"></input>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-10">
-        <h3>Рецепт</h3>
-        <textarea class="form-control w-100 h-10" id="recipe" rows="10" name="recipe"></textarea>
-    </div>
-    <div class="col-md-2 col-md-offset-10">
-        <h3>Ингридиенты</h3>
-        <textarea class="form-control w-100 h-10" id="ingrid" rows="10" name="ingrid"></textarea>
-    </div>
-</div>
 <form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <input type="str" class="form-control" id="name" name="name">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <h3>Рецепт</h3>
+            <textarea class="form-control w-100 h-10" id="recipe" rows="10" name="recipe"></textarea>
+        </div>
+        <div class="col-md-2 col-md-offset-10">
+            <h3>Ингридиенты</h3>
+            <textarea class="form-control w-100 h-10" id="ingrid" rows="10" name="ingrid"></textarea>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-4">
             <h5>Загрузите фотографию</h5>

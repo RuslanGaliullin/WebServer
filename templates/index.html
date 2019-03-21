@@ -3,14 +3,18 @@
 {% block content %}
 {% if "username" in session %}
 <a class="navbar-brand" href="/logout">Выход</a>
-{% endif %}
 <a href="/add_book">Добавить книгу</a>
+{% else %}
+<a class="navbar-brand" href="/login">Вход</a>
+{% endif %}
 {% for item in news %}
 <div class="alert alert-dark" role="alert">
     <h2>{{item[1]}}</h2>
     <div>{{item[2]}}</div>
-    <div>{{item[3]}} <img class="d-block w-810 h-810" src="{{item[5]}}"> </div>
+    <div>{{item[3]}} <img class="d-block w-810 h-810" src="{{item[5]}}"></div>
+    {% if item[6] in session.values() %}
     <a href="/delete_book/{{item[0]}}">Удалить книгу</a>
+    {% endif %}
 </div>
 {% endfor %}
 {% endblock %}
