@@ -24,6 +24,7 @@
     {% endfor %}
     </p>
     <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-    <a href="/registration">Зарегистрироваться</a> {{ form.submit() }}</p>
+    <a href="/registration">Зарегистрироваться</a>
+    {{ form.submit() }}
 </form>
 {% endblock %}

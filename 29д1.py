@@ -88,7 +88,7 @@ class NewsModel:
             str(datetime.date.today()).split('-')[2])
         cursor.execute('''INSERT INTO news 
                           (name, content, ingrid, photo,hard,date, user_id) 
-                          VALUES (?,?,?,?,?,?)''', (name, content, ingrid, photo, hard, date, str(user_id)))
+                          VALUES (?,?,?,?,?,?,?)''', (name, content, ingrid, photo, hard, date, str(user_id)))
         cursor.close()
         self.connection.commit()
 
@@ -156,9 +156,7 @@ def login():
         if exists[0]:
             session['username'] = user_name
             session['user_id'] = exists[1]
-        return redirect("/index")
-    if form.validate_on_submit():
-        return redirect('/registration')
+            return redirect("/index")
     return render_template('login.html', title='Авторизация', form=form)
 
 
