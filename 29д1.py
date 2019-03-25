@@ -184,7 +184,7 @@ def add_book():
                 request.files['file'].save(where)
                 editor_files(where)
             else:
-                print(0)
+                return redirect('/add_book')
             nm = NewsModel(db.get_connection())
             nm.insert(title, content, ingrid, hard, where, session['user_id'])
             return redirect("/index")
