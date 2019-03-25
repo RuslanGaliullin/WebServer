@@ -225,9 +225,11 @@ def form_sample():
     elif request.method == 'POST':
         user_name = request.form['email']
         password = request.form['password']
-        user_model = UsersModel(db.get_connection())
-        user_model.insert(user_name, password)
-        return redirect("/index")
+        if len(user_name) !=0 and len(password) != 0:
+            user_model = UsersModel(db.get_connection())
+            user_model.insert(user_name, password)
+            return redirect("/index")
+        return redirect('/registration')
 
 
 if __name__ == '__main__':
