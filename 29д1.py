@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask, request, render_template, session, redirect
-import  datetime
+import datetime
 from flas import LoginForm
 import os
 from PIL import Image
@@ -174,21 +174,21 @@ def add_book():
     elif request.method == 'POST':
         if 'username' not in session:
             return redirect('/login')
-        # if title is not None:
-        #    form.name.data = title
-        #    form.content.data = content
-        #    form.link.data = brifly
-        #    form.foto.data = photo
         title = request.form['name']
         content = request.form['recipe']
         ingrid = request.form['ingrid']
         hard = 0
-        where = 'static/' + request.files['file'].filename
-        request.files['file'].save(where)
-        editor_files(where)
-        nm = NewsModel(db.get_connection())
-        nm.insert(title, content, ingrid, hard, where, session['user_id'])
-        return redirect("/index")
+        if title != '' and content != '' and ingrid != '':
+            if 'file' not in request.form:
+                where = 'static/' + request.files['file'].filename
+                request.files['file'].save(where)
+                editor_files(where)
+            else:
+                print(0)
+            nm = NewsModel(db.get_connection())
+            nm.insert(title, content, ingrid, hard, where, session['user_id'])
+            return redirect("/index")
+        return redirect('/add_book')
         # return render_template('add_news.html')
 
 
@@ -225,7 +225,7 @@ def form_sample():
     elif request.method == 'POST':
         user_name = request.form['email']
         password = request.form['password']
-        if len(user_name) !=0 and len(password) != 0:
+        if len(user_name) != 0 and len(password) != 0:
             user_model = UsersModel(db.get_connection())
             user_model.insert(user_name, password)
             return redirect("/index")
