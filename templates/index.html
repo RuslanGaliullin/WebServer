@@ -7,6 +7,10 @@
 {% else %}
 <a class="navbar-brand" href="/login">Вход</a>
 {% endif %}
+<ul class="nav nav-list">
+  <li class="nav-header">Cортировать по</li>
+  <li class="active"><a href="/index">Дате</a></li><li><a href="/index_name">Названию</a></li><li><a href="/index_hard">Сложности</a></li>
+</ul>
 {% for item in news %}
 <div class="row">
     <div class="col-md-4">
@@ -18,14 +22,14 @@
         Рецепт:
         {{item[2]}}
     </div>
-    <div class="col-md-5">
-        <img class="d-block w-810 h-810" src="{{item[5]}}">
-    </div>
 </div>
 <div class="row">
     <div class="col-md-1">
         Ингридиенты:
         {{item[3]}}
+    </div>
+    <div class="col-md-7">
+        <img class="d-block w-1000 h-1000" src="{{item[5]}}">
     </div>
 </div>
 <a href="/delete_book/{{item[0]}}">Удалить книгу</a>

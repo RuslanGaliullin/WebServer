@@ -84,7 +84,8 @@ class NewsModel:
 
     def insert(self, name, content, ingrid, photo, hard, user_id):
         cursor = self.connection.cursor()
-        date = int(str(datetime.date.today()).split('-')[0]) + int(str(datetime.date.today()).split('-')[1]) + int(
+        date = int(str(datetime.date.today()).split('-')[0]) * 364 + int(
+            str(datetime.date.today()).split('-')[1]) * 30 + int(
             str(datetime.date.today()).split('-')[2])
         cursor.execute('''INSERT INTO news 
                           (name, content, ingrid, photo,hard,date, user_id) 
@@ -100,11 +101,7 @@ class NewsModel:
 
     def get_all(self, user_id=None, sort=None):
         cursor = self.connection.cursor()
-        if user_id:
-            cursor.execute("SELECT * FROM news WHERE user_id = ?",
-                           (str(user_id)))
-        else:
-            cursor.execute("SELECT * FROM news ORDER BY {}".format(sort))
+        cursor.execute("SELECT * FROM news ORDER BY name ASC")
         rows = cursor.fetchall()
         return rows
 
@@ -134,14 +131,24 @@ def editor_files(name):
 @app.route('/')
 @app.route('/index')
 def index():
-    news = NewsModel(db.get_connection()).get_all(None, 'date')
+    news = NewsModel(db.get_connection()).get_all()
+    print(news)
+    news = sorted(news, key=lambda tup: tup[6], reverse=True)
     return render_template('index.html',
                            news=news)
 
 
 @app.route('/index_name')
 def index_name():
-    news = NewsModel(db.get_connection()).get_all(None, 'name')
+    news = NewsModel(db.get_connection()).get_all()
+    news = sorted(news, key=lambda tup: tup[1], reverse=True)
+    return render_template('index.html', news=news)
+
+
+@app.route('/index_hard')
+def index_hard():
+    news = NewsModel(db.get_connection()).get_all()
+    news = sorted(news, key=lambda tup: tup[5], reverse=True)
     return render_template('index.html', news=news)
 
 
@@ -177,7 +184,7 @@ def add_book():
         title = request.form['name']
         content = request.form['recipe']
         ingrid = request.form['ingrid']
-        hard = 0
+        hard = request.form['hard']
         if title != '' and content != '' and ingrid != '':
             if 'file' not in request.form:
                 where = 'static/' + request.files['file'].filename
