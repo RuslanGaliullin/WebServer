@@ -133,7 +133,7 @@ def editor_files(name):
 def index():
     news = NewsModel(db.get_connection()).get_all()
     print(news)
-    news = sorted(news, key=lambda tup: tup[6], reverse=True)
+    news = sorted(news, key=lambda tup: tup[6])
     return render_template('index.html',
                            news=news)
 
@@ -141,14 +141,14 @@ def index():
 @app.route('/index_name')
 def index_name():
     news = NewsModel(db.get_connection()).get_all()
-    news = sorted(news, key=lambda tup: tup[1], reverse=True)
+    news = sorted(news, key=lambda tup: tup[1])
     return render_template('index.html', news=news)
 
 
 @app.route('/index_hard')
 def index_hard():
     news = NewsModel(db.get_connection()).get_all()
-    news = sorted(news, key=lambda tup: tup[5], reverse=True)
+    news = sorted(news, key=lambda tup: tup[5])
     return render_template('index.html', news=news)
 
 
