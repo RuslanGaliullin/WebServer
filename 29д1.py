@@ -133,7 +133,7 @@ def editor_files(name):
 def index():
     news = NewsModel(db.get_connection()).get_all()
     print(news)
-    news = sorted(news, key=lambda tup: tup[6])
+    news = sorted(news, key=lambda tup: tup[6],reverse=True)
     return render_template('index.html',
                            news=news)
 
