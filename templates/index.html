@@ -3,37 +3,37 @@
 {% block content %}
 {% if "username" in session %}
 <a class="navbar-brand" href="/logout">Выход</a>
-<a href="/add_book">Добавить книгу</a>
+<a href="/add_book">Добавить рецепт</a>
 {% else %}
 <a class="navbar-brand" href="/login">Вход</a>
 {% endif %}
 <ul class="nav nav-list">
-  <li class="nav-header">Cортировать по</li>
-  <li class="active"><a href="/index">Дате</a></li><li><a href="/index_name">Названию</a></li><li><a href="/index_hard">Сложности</a></li>
+  <li class="nav-header"><strong>Cортировать по:&nbsp;&nbsp;</strong></li>
+  <li class="active"><a href="/index">Дате&nbsp;</a></li><li><a href="/index_name">Названию&nbsp;</a></li><li><a href="/index_hard">Сложности&nbsp;</a></li>
 </ul>
+<div class="row">
+    <br><br><br>
+    </div>
 {% for item in news %}
 <div class="row">
     <div class="col-md-4">
-        Название: {{item[1]}}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        Рецепт:
-        {{item[2]}}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-1">
-        Ингридиенты:
-        {{item[3]}}
-        Сложность:
+        <b>Название:&nbsp;</b>
+        {{item[1]}}<br>
+        <b>Рецепт:&nbsp;</b>
+        {{item[2]}}<br>
+        <b>Ингридиенты:&nbsp;</b>
+        {{item[3]}}<br>
+        <b>Сложность:&nbsp;</b>
         {{item[4]}}
     </div>
-    <div class="col-md-7">
-        <img class="d-block w-1000 h-1000" src="{{item[5]}}">
+    <div class="col-lg-3 col-md-4 col-6">
+        <img class="img-fluid" src="{{item[5]}}" alt="{{item[5]}}">
     </div>
 </div>
+
+<div class="row">
+    <br><br><br>
+    </div>
 {% if session["username"] == admin %}
 <a href="/delete_book/{{item[0]}}">Удалить книгу</a>
 {% endif %}
