@@ -34,6 +34,8 @@
         <img class="d-block w-1000 h-1000" src="{{item[5]}}">
     </div>
 </div>
+{% if session["username"] == admin %}
 <a href="/delete_book/{{item[0]}}">Удалить книгу</a>
+{% endif %}
 {% endfor %}
 {% endblock %}

@@ -132,24 +132,29 @@ def editor_files(name):
 @app.route('/index')
 def index():
     news = NewsModel(db.get_connection()).get_all()
-    print(news)
-    news = sorted(news, key=lambda tup: tup[6],reverse=True)
+    admin = 'rusgal000@gmail.com'
+    if len(news) != 0:
+        news = sorted(news, key=lambda tup: tup[6], reverse=True)
     return render_template('index.html',
-                           news=news)
+                           news=news, admin=admin)
 
 
 @app.route('/index_name')
 def index_name():
+    admin = 'rusgal000@gmail.com'
     news = NewsModel(db.get_connection()).get_all()
-    news = sorted(news, key=lambda tup: tup[1])
-    return render_template('index.html', news=news)
+    if len(news) != 0:
+        news = sorted(news, key=lambda tup: tup[1])
+    return render_template('index.html', news=news, admin=admin)
 
 
 @app.route('/index_hard')
 def index_hard():
+    admin = 'rusgal000@gmail.com'
     news = NewsModel(db.get_connection()).get_all()
-    news = sorted(news, key=lambda tup: tup[5])
-    return render_template('index.html', news=news)
+    if len(news) != 0:
+        news = sorted(news, key=lambda tup: tup[5])
+    return render_template('index.html', news=news, admin=admin)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -234,8 +239,13 @@ def form_sample():
         password = request.form['password']
         if len(user_name) != 0 and len(password) != 0:
             user_model = UsersModel(db.get_connection())
+            vse = user_model.get_all()
+            for i in vse:
+                if user_name in i:
+                    print('Такой логин уже занят')
+                    return redirect('/registration')
             user_model.insert(user_name, password)
-            return redirect("/index")
+            return redirect("/login")
         return redirect('/registration')
 
 
