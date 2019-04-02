@@ -8,12 +8,17 @@
 <a class="navbar-brand" href="/login">Вход</a>
 {% endif %}
 <ul class="nav nav-list">
-  <li class="nav-header"><strong>Cортировать по:&nbsp;&nbsp;</strong></li>
-  <li class="active"><a href="/index">Дате&nbsp;</a></li><li><a href="/index_name">Названию&nbsp;</a></li><li><a href="/index_hard">Сложности&nbsp;</a></li>
+    <li class="nav-header"><strong>Cортировать по:&nbsp;&nbsp;</strong></li>
+    <li class="active"><a href="/index">Дате от макс к мин</a></li>
+    <li><a href="/index_false">Дате от мин к макс</a></li>
+    <li><a href="/index_name_true">Названию&nbsp;от макс к миин</a></li>
+    <li><a href="/index_name_false">Названию&nbsp;от мин к макс</a></li>
+    <li><a href="/index_hard_false">Сложности&nbsp;от макс к мин</a></li>
+    <li><a href="/index_hard_true">Сложности&nbsp;от мин к макс</a></li>
 </ul>
 <div class="row">
     <br><br><br>
-    </div>
+</div>
 {% for item in news %}
 <div class="row">
     <div class="col-md-4">
@@ -33,7 +38,7 @@
 
 <div class="row">
     <br><br><br>
-    </div>
+</div>
 {% if session["username"] == admin %}
 <a href="/delete_book/{{item[0]}}">Удалить рецепт</a>
 {% endif %}

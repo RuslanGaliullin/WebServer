@@ -139,21 +139,49 @@ def index():
                            news=news, admin=admin)
 
 
-@app.route('/index_name')
-def index_name():
+@app.route('/index_false')
+def index_false():
+    news = NewsModel(db.get_connection()).get_all()
+    admin = 'rusgal000@gmail.com'
+    if len(news) != 0:
+        news = sorted(news, key=lambda tup: tup[6], reverse=False)
+    return render_template('index.html',
+                           news=news, admin=admin)
+
+
+@app.route('/index_name_true')
+def index_name_true():
     admin = 'rusgal000@gmail.com'
     news = NewsModel(db.get_connection()).get_all()
     if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[1])
+        news = sorted(news, key=lambda tup: tup[1], reverse=True)
     return render_template('index.html', news=news, admin=admin)
 
 
-@app.route('/index_hard')
-def index_hard():
+@app.route('/index_name_false')
+def index_name_false():
     admin = 'rusgal000@gmail.com'
     news = NewsModel(db.get_connection()).get_all()
     if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[5])
+        news = sorted(news, key=lambda tup: tup[1], reverse=False)
+    return render_template('index.html', news=news, admin=admin)
+
+
+@app.route('/index_hard_true')
+def index_hard_true():
+    admin = 'rusgal000@gmail.com'
+    news = NewsModel(db.get_connection()).get_all()
+    if len(news) != 0:
+        news = sorted(news, key=lambda tup: tup[5], reverse=True)
+    return render_template('index.html', news=news, admin=admin)
+
+
+@app.route('/index_hard_false')
+def index_hard_false():
+    admin = 'rusgal000@gmail.com'
+    news = NewsModel(db.get_connection()).get_all()
+    if len(news) != 0:
+        news = sorted(news, key=lambda tup: tup[5], reverse=False)
     return render_template('index.html', news=news, admin=admin)
 
 
