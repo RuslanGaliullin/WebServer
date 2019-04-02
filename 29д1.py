@@ -122,8 +122,8 @@ user_model.init_table()
 
 def editor_files(name):
     img = Image.open(name)
-    width = 96
-    height = 96
+    width = 120
+    height = 120
     resized_img = img.resize((width, height), Image.ANTIALIAS)
     resized_img.save(name)
 
@@ -196,6 +196,7 @@ def add_book():
                 request.files['file'].save(where)
                 editor_files(where)
             else:
+                print('не все поля заполнены')
                 return redirect('/add_book')
             nm = NewsModel(db.get_connection())
             nm.insert(title, content, ingrid, hard, where, session['user_id'])

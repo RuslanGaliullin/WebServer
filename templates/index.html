@@ -26,7 +26,7 @@
         <b>Сложность:&nbsp;</b>
         {{item[4]}}
     </div>
-    <div class="col-lg-3 col-md-4 col-6">
+    <div class="col-lg-3 col-md-8 col-6">
         <img class="img-fluid" src="{{item[5]}}" alt="{{item[5]}}">
     </div>
 </div>
@@ -35,7 +35,7 @@
     <br><br><br>
     </div>
 {% if session["username"] == admin %}
-<a href="/delete_book/{{item[0]}}">Удалить книгу</a>
+<a href="/delete_book/{{item[0]}}">Удалить рецепт</a>
 {% endif %}
 {% endfor %}
 {% endblock %}
