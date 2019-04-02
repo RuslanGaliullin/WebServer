@@ -9,19 +9,24 @@
 {% endif %}
 <ul class="nav nav-list">
     <li class="nav-header"><strong>Cортировать по:&nbsp;&nbsp;</strong></li>
-    <li class="active"><a href="/index">Дате от макс к мин</a></li>
-    <li><a href="/index_false">Дате от мин к макс</a></li>
-    <li><a href="/index_name_true">Названию&nbsp;от макс к миин</a></li>
-    <li><a href="/index_name_false">Названию&nbsp;от мин к макс</a></li>
-    <li><a href="/index_hard_false">Сложности&nbsp;от макс к мин</a></li>
-    <li><a href="/index_hard_true">Сложности&nbsp;от мин к макс</a></li>
+    Дате
+    <li class="active"><a href="/index">&#9660;</a></li>
+    <li><a href="/index_false">&#9650;</a></li>
+    &#8195;
+    Названию
+    <li><a href="/index_name_true">&#9660;</a></li>
+    <li><a href="/index_name_false">&#9650;</a></li>
+    &#8195;
+    Сложности
+    <li><a href="/index_hard_false">&#9660;</a></li>
+    <li><a href="/index_hard_true">&#9650;</a></li>
 </ul>
 <div class="row">
     <br><br><br>
 </div>
 {% for item in news %}
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <b>Название:&nbsp;</b>
         {{item[1]}}<br>
         <b>Рецепт:&nbsp;</b>
@@ -31,8 +36,8 @@
         <b>Сложность:&nbsp;</b>
         {{item[4]}}
     </div>
-    <div class="col-lg-3 col-md-8 col-6">
-        <img class="img-fluid" src="{{item[5]}}" alt="{{item[5]}}">
+    <div class="col-lg-3 col-md-8 col-5">
+        <img width="2000" height="800" class="img-thumbnail img-fluid" src="{{item[5]}}" alt="">
     </div>
 </div>
 
