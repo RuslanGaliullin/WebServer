@@ -34,7 +34,10 @@
         <b>Ингридиенты:&nbsp;</b>
         {{item[3]}}<br>
         <b>Сложность:&nbsp;</b>
-        {{item[4]}}
+        {{item[4]}}<br>
+        {% if session["username"] == admin %}
+<a href="/delete_book/{{item[0]}}">Удалить рецепт</a>
+{% endif %}
     </div>
     <div class="col-lg-3 col-md-8 col-5">
         <img width="2000" height="800" class="img-thumbnail img-fluid" src="{{item[5]}}" alt="">
@@ -44,8 +47,6 @@
 <div class="row">
     <br><br><br>
 </div>
-{% if session["username"] == admin %}
-<a href="/delete_book/{{item[0]}}">Удалить рецепт</a>
-{% endif %}
+
 {% endfor %}
 {% endblock %}
