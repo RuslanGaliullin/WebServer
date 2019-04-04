@@ -204,7 +204,7 @@ def login():
 def logout():
     session.pop('username', 0)
     session.pop('user_id', 0)
-    return redirect('/login')
+    return redirect('/index')
 
 
 @app.route('/add_book', methods=['GET', 'POST'])
@@ -220,7 +220,7 @@ def add_book():
         hard = request.form['hard']
         if title != '' and content != '' and ingrid != '':
             if 'file' not in request.form:
-                where = 'static/' + request.files['file'].filename
+                where = 'static/for_recipes/' + request.files['file'].filename
                 request.files['file'].save(where)
                 editor_files(where)
             else:
@@ -252,6 +252,7 @@ def delete_book(news_id):
     if 'username' not in session:
         return redirect('/login')
     nm = NewsModel(db.get_connection())
+    print(session)
     a = nm.get(news_id)
     filename = a[5]
     os.remove(filename)
@@ -273,6 +274,11 @@ def form_sample():
                 if user_name in i:
                     print('Такой логин уже занят')
                     return redirect('/registration')
+            #if 'file' not in request.form:
+            #    where = 'static/for_logins/' + request.files['file'].filename
+            #    request.files['file'].save(where)
+            #    editor_files(where)
+            #    print(0)
             user_model.insert(user_name, password)
             return redirect("/login")
         return redirect('/registration')
