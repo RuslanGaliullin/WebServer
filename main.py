@@ -274,7 +274,7 @@ def form_sample():
                 if user_name in i:
                     print('Такой логин уже занят')
                     return redirect('/registration')
-            #if 'file' not in request.form:
+            # if 'file' not in request.form:
             #    where = 'static/for_logins/' + request.files['file'].filename
             #    request.files['file'].save(where)
             #    editor_files(where)
