@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
+# Cоздаем базу данных
 class DB:
     def __init__(self):
         conn = sqlite3.connect('news.db', check_same_thread=False)
@@ -21,6 +22,7 @@ class DB:
         self.conn.close()
 
 
+# пользователи в бд
 class UsersModel:
     def __init__(self, connection):
         self.connection = connection
@@ -63,7 +65,7 @@ class UsersModel:
         return (True, row[0]) if row else (False,)
 
 
-class NewsModel:
+class RecipesModel:
     def __init__(self, connection):
         self.connection = connection
 
@@ -99,7 +101,7 @@ class NewsModel:
         row = cursor.fetchone()
         return row
 
-    def get_all(self, user_id=None, sort=None):
+    def get_all(self):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM news ORDER BY name ASC")
         rows = cursor.fetchall()
@@ -114,12 +116,13 @@ class NewsModel:
 
 
 db = DB()
-news = NewsModel(db.get_connection())
+news = RecipesModel(db.get_connection())
 news.init_table()
 user_model = UsersModel(db.get_connection())
 user_model.init_table()
 
 
+# изменение размеров загружаемых картиинок
 def editor_files(name):
     img = Image.open(name)
     width = 120
@@ -129,60 +132,60 @@ def editor_files(name):
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index')  # главная страница сортировка по дате от max к min
 def index():
-    news = NewsModel(db.get_connection()).get_all()
+    recipes = RecipesModel(db.get_connection()).get_all()
     admin = 'rusgal000@gmail.com'
-    if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[6], reverse=True)
+    if len(recipes) != 0:
+        recipes = sorted(recipes, key=lambda tup: tup[6], reverse=True)
     return render_template('index.html',
-                           news=news, admin=admin)
+                           recipes=recipes, admin=admin)
 
 
-@app.route('/index_false')
+@app.route('/index_false')  # главная страница сортировка по дате от min к max
 def index_false():
-    news = NewsModel(db.get_connection()).get_all()
+    recipes = RecipesModel(db.get_connection()).get_all()
     admin = 'rusgal000@gmail.com'
-    if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[6], reverse=False)
+    if len(recipes) != 0:
+        recipes = sorted(recipes, key=lambda tup: tup[6], reverse=False)
     return render_template('index.html',
-                           news=news, admin=admin)
+                           recipes=recipes, admin=admin)
 
 
-@app.route('/index_name_true')
+@app.route('/index_name_true')  # главная страница сортировка по названию от А до Я
 def index_name_true():
     admin = 'rusgal000@gmail.com'
-    news = NewsModel(db.get_connection()).get_all()
-    if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[1], reverse=True)
-    return render_template('index.html', news=news, admin=admin)
+    recipes = RecipesModel(db.get_connection()).get_all()
+    if len(recipes) != 0:
+        recipes = sorted(recipes, key=lambda tup: tup[1], reverse=True)
+    return render_template('index.html', recipes=recipes, admin=admin)
 
 
-@app.route('/index_name_false')
+@app.route('/index_name_false')  # главная страница сортировка по названию от Я до А
 def index_name_false():
     admin = 'rusgal000@gmail.com'
-    news = NewsModel(db.get_connection()).get_all()
-    if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[1], reverse=False)
-    return render_template('index.html', news=news, admin=admin)
+    recipes = RecipesModel(db.get_connection()).get_all()
+    if len(recipes) != 0:
+        recipes = sorted(recipes, key=lambda tup: tup[1], reverse=False)
+    return render_template('index.html', recipes=recipes, admin=admin)
 
 
-@app.route('/index_hard_true')
+@app.route('/index_hard_true')  # главная страница сортировка по сложности рецеты от min к max
 def index_hard_true():
     admin = 'rusgal000@gmail.com'
-    news = NewsModel(db.get_connection()).get_all()
-    if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[5], reverse=True)
-    return render_template('index.html', news=news, admin=admin)
+    recipes = RecipesModel(db.get_connection()).get_all()
+    if len(recipes) != 0:
+        news = sorted(recipes, key=lambda tup: tup[5], reverse=True)
+    return render_template('index.html', recipes=recipes, admin=admin)
 
 
-@app.route('/index_hard_false')
+@app.route('/index_hard_false')  # главная страница сортировка по сложности рецеты от max к min
 def index_hard_false():
     admin = 'rusgal000@gmail.com'
-    news = NewsModel(db.get_connection()).get_all()
-    if len(news) != 0:
-        news = sorted(news, key=lambda tup: tup[5], reverse=False)
-    return render_template('index.html', news=news, admin=admin)
+    recipes = RecipesModel(db.get_connection()).get_all()
+    if len(recipes) != 0:
+        recipes = sorted(recipes, key=lambda tup: tup[5], reverse=False)
+    return render_template('index.html', recipes=recipes, admin=admin)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -207,10 +210,11 @@ def logout():
     return redirect('/index')
 
 
-@app.route('/add_book', methods=['GET', 'POST'])
-def add_book():
+# добавить рецепт
+@app.route('/add_recipe', methods=['GET', 'POST'])
+def add_recipe():
     if request.method == 'GET':
-        return render_template('add_news.html')
+        return render_template('add_recipe.html')
     elif request.method == 'POST':
         if 'username' not in session:
             return redirect('/login')
@@ -226,11 +230,11 @@ def add_book():
             else:
                 print('не все поля заполнены')
                 return redirect('/add_book')
-            nm = NewsModel(db.get_connection())
-            nm.insert(title, content, ingrid, hard, where, session['user_id'])
+            recipes = RecipesModel(db.get_connection())
+            recipes.insert(title, content, ingrid, hard, where, session['user_id'])
             return redirect("/index")
-        return redirect('/add_book')
-        # return render_template('add_news.html')
+        return redirect('/add_recipe')
+        # return render_template('add_recipe.html')
 
 
 # @app.route('/red_book/<int:news_id>', methods=['GET', 'POST'])
@@ -246,20 +250,20 @@ def add_book():
 #    photo = a[4]
 #    id = a[0]
 
-
-@app.route('/delete_book/<int:news_id>', methods=['GET'])
+# удалить рецепт
+@app.route('/delete_recipe/<int:news_id>', methods=['GET'])
 def delete_book(news_id):
     if 'username' not in session:
         return redirect('/login')
-    nm = NewsModel(db.get_connection())
-    print(session)
-    a = nm.get(news_id)
+    recipes = RecipesModel(db.get_connection())
+    a = recipes.get(news_id)
     filename = a[5]
     os.remove(filename)
-    nm.delete(news_id)
+    recipes.delete(news_id)
     return redirect("/index")
 
 
+# регистрация
 @app.route('/registration', methods=['POST', 'GET'])
 def form_sample():
     if request.method == 'GET':

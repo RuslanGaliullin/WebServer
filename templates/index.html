@@ -3,7 +3,7 @@
 {% block content %}
 {% if "username" in session %}
 <a class="navbar-brand" href="/logout">Выход</a>
-<a href="/add_book">Добавить рецепт</a>
+<a href="/add_recipe">Добавить рецепт</a>
 {% else %}
 <a class="navbar-brand" href="/login">Вход</a>
 {% endif %}
@@ -24,7 +24,7 @@
 <div class="row">
     <br><br><br>
 </div>
-{% for item in news %}
+{% for item in recipes %}
 
 <div class="row">
     <div class="col-md-4">
@@ -38,7 +38,7 @@
         <b>Сложность:&nbsp;</b>
         {{item[4]}}<br>
         {% if session["username"] == admin %}
-        <a href="/delete_book/{{item[0]}}">Удалить рецепт</a>
+        <a href="/delete_recipe/{{item[0]}}">Удалить рецепт</a>
         {% endif %}
     </div>
     <div class="col-md-4">
