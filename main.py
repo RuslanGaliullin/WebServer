@@ -122,17 +122,9 @@ user_model = UsersModel(db.get_connection())
 user_model.init_table()
 
 
-# изменение размеров загружаемых картиинок
-def editor_files(name):
-    img = Image.open(name)
-    width = 120
-    height = 120
-    resized_img = img.resize((width, height), Image.ANTIALIAS)
-    resized_img.save(name)
-
-
+# главная страница сортировка по дате от max к min
 @app.route('/')
-@app.route('/index')  # главная страница сортировка по дате от max к min
+@app.route('/index')
 def index():
     recipes = RecipesModel(db.get_connection()).get_all()
     admin = 'rusgal000@gmail.com'
@@ -142,7 +134,8 @@ def index():
                            recipes=recipes, admin=admin)
 
 
-@app.route('/index_false')  # главная страница сортировка по дате от min к max
+# главная страница сортировка по дате от min к max
+@app.route('/index_false')
 def index_false():
     recipes = RecipesModel(db.get_connection()).get_all()
     admin = 'rusgal000@gmail.com'
@@ -152,7 +145,8 @@ def index_false():
                            recipes=recipes, admin=admin)
 
 
-@app.route('/index_name_true')  # главная страница сортировка по названию от А до Я
+# главная страница сортировка по названию от А до Я
+@app.route('/index_name_true')
 def index_name_true():
     admin = 'rusgal000@gmail.com'
     recipes = RecipesModel(db.get_connection()).get_all()
@@ -161,7 +155,8 @@ def index_name_true():
     return render_template('index.html', recipes=recipes, admin=admin)
 
 
-@app.route('/index_name_false')  # главная страница сортировка по названию от Я до А
+# главная страница сортировка по названию от Я до А
+@app.route('/index_name_false')
 def index_name_false():
     admin = 'rusgal000@gmail.com'
     recipes = RecipesModel(db.get_connection()).get_all()
@@ -170,7 +165,8 @@ def index_name_false():
     return render_template('index.html', recipes=recipes, admin=admin)
 
 
-@app.route('/index_hard_true')  # главная страница сортировка по сложности рецеты от min к max
+# главная страница сортировка по сложности рецеты от min к max
+@app.route('/index_hard_true')
 def index_hard_true():
     admin = 'rusgal000@gmail.com'
     recipes = RecipesModel(db.get_connection()).get_all()
@@ -179,7 +175,8 @@ def index_hard_true():
     return render_template('index.html', recipes=recipes, admin=admin)
 
 
-@app.route('/index_hard_false')  # главная страница сортировка по сложности рецеты от max к min
+# главная страница сортировка по сложности рецеты от max к min
+@app.route('/index_hard_false')
 def index_hard_false():
     admin = 'rusgal000@gmail.com'
     recipes = RecipesModel(db.get_connection()).get_all()
@@ -188,6 +185,7 @@ def index_hard_false():
     return render_template('index.html', recipes=recipes, admin=admin)
 
 
+# авторизация
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -203,6 +201,7 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+# выход
 @app.route('/logout')
 def logout():
     session.pop('username', 0)
@@ -223,18 +222,17 @@ def add_recipe():
         ingrid = request.form['ingrid']
         hard = request.form['hard']
         if title != '' and content != '' and ingrid != '':
-            if 'file' not in request.form:
+            # охранение картинки рецепта
+            if request.files.get('file', None):
                 where = 'static/for_recipes/' + request.files['file'].filename
                 request.files['file'].save(where)
-                editor_files(where)
             else:
-                print('не все поля заполнены')
-                return redirect('/add_recipe')
+                # если не все поля заполнены
+                return render_template('not_enough.html')
             recipes = RecipesModel(db.get_connection())
             recipes.insert(title, content, ingrid, hard, where, session['user_id'])
             return redirect("/index")
-        return redirect('/add_recipe')
-        # return render_template('add_recipe.html')
+        return render_template('not_enough.html')
 
 
 # @app.route('/red_book/<int:news_id>', methods=['GET', 'POST'])
@@ -246,7 +244,6 @@ def add_recipe():
 #    a = nm.get(news_id)
 #    title = a[1]
 #    content = a[2]
-#    brifly = a[3]
 #    photo = a[4]
 #    id = a[0]
 
@@ -274,18 +271,17 @@ def form_sample():
         if len(user_name) != 0 and len(password) != 0:
             user_model = UsersModel(db.get_connection())
             vse = user_model.get_all()
+            if request.files.get('file', None):
+                where = 'static/for_users/' + request.files['file'].filename
+                request.files['file'].save(where)
             for i in vse:
                 if user_name in i:
-                    print('Такой логин уже занят')
-                    return redirect('/registration')
-            # if 'file' not in request.form:
-            #    where = 'static/for_logins/' + request.files['file'].filename
-            #    request.files['file'].save(where)
-            #    editor_files(where)
-            #    print(0)
+                    # если логин уже занят
+                    return render_template('login_was.html')
             user_model.insert(user_name, password)
             return redirect("/login")
-        return redirect('/registration')
+        # если не ввели логин или пароль
+        return render_template('no_login_password.html')
 
 
 if __name__ == '__main__':
