@@ -175,7 +175,7 @@ def index_hard_true():
     admin = 'rusgal000@gmail.com'
     recipes = RecipesModel(db.get_connection()).get_all()
     if len(recipes) != 0:
-        news = sorted(recipes, key=lambda tup: tup[5], reverse=True)
+        recipes = sorted(recipes, key=lambda tup: tup[5], reverse=True)
     return render_template('index.html', recipes=recipes, admin=admin)
 
 
@@ -229,7 +229,7 @@ def add_recipe():
                 editor_files(where)
             else:
                 print('не все поля заполнены')
-                return redirect('/add_book')
+                return redirect('/add_recipe')
             recipes = RecipesModel(db.get_connection())
             recipes.insert(title, content, ingrid, hard, where, session['user_id'])
             return redirect("/index")
