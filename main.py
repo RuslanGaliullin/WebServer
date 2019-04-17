@@ -126,10 +126,10 @@ user_model.init_table()
 @app.route('/')
 @app.route('/index')
 def index():
-    #if os.path.isdir('/static'):
-    #    os.mkdir('/static')
-    #    os.mkdir('/static/for_recipes')
-    #    os.mkdir('/static/for_users')
+    if not os.path.exists('.static'):
+        os.mkdir('./static')
+        os.mkdir('./static/for_recipes')
+        os.mkdir('./static/for_users')
     recipes = RecipesModel(db.get_connection()).get_all()
     admin = 'rusgal000@gmail.com'
     if len(recipes) != 0:
